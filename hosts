@@ -1,0 +1,7 @@
+[main]
+lb
+
+[workers]
+srv1
+srv2
+srv3

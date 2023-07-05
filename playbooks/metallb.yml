@@ -1,0 +1,28 @@
+---
+- name: Metallb
+  hosts: main
+  environment:
+    KUBECONFIG: "/etc/kubernetes/admin.conf"
+  tasks:
+    - name: Add Metallb repo
+      kubernetes.core.helm_repository:
+        name: metallb
+        repo_url: https://metallb.github.io/metallb
+    - name: Deploy Metallb
+      kubernetes.core.helm:
+        name: metallb
+        chart_ref: metallb/metallb
+        release_namespace: metallb-system
+        create_namespace: true
+    - name: Pool Configuration
+      kubernetes.core.k8s:
+        state: present
+        definition:
+          apiVersion: metallb.io/v1beta1
+          kind: IPAddressPool
+          metadata:
+            name: address-pool
+            namespace: metallb-system
+          spec:
+            addresses:
+              - 172.86.0.0/16

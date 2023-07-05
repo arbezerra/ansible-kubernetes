@@ -1,0 +1,29 @@
+---
+- name: Deploy Cluster
+  hosts: main
+  tasks:
+    - name: Kubeadm reset
+      changed_when: true
+      ansible.builtin.command: kubeadm reset -f
+    - name: Kubeadm init
+      changed_when: true
+      ansible.builtin.command: kubeadm init --apiserver-advertise-address="192.168.0.1" --pod-network-cidr=10.0.0.0/8 --service-dns-domain andre.cluster
+    - name: Fetch config file
+      ansible.builtin.fetch:
+        src: /etc/kubernetes/admin.conf
+        dest: .kube/config
+        flat: true
+    - name: Kubeadm create token
+      register: join_command
+      changed_when: true
+      ansible.builtin.command: kubeadm token create --print-join-command
+
+- name: Join Cluster
+  hosts: workers
+  tasks:
+    - name: Kubeadm reset
+      changed_when: true
+      ansible.builtin.command: kubeadm reset -f
+    - name: Kubeadm join
+      changed_when: true
+      ansible.builtin.command: "{{ hostvars['lb']['join_command'].stdout }}"

@@ -1,0 +1,72 @@
+---
+- name: Ingress Nginx
+  hosts: main
+  environment:
+    KUBECONFIG: "/etc/kubernetes/admin.conf"
+  tasks:
+    - name: Add Ingress Nginx repo
+      kubernetes.core.helm_repository:
+        name: ingress-nginx
+        repo_url: https://kubernetes.github.io/ingress-nginx
+    - name: Deploy Ingress Nginx
+      kubernetes.core.helm:
+        name: ingress-nginx
+        chart_ref: ingress-nginx/ingress-nginx
+        release_namespace: ingress-nginx
+        create_namespace: true
+    - name: Generate DH parameters
+      community.crypto.openssl_dhparam:
+        path: /etc/ssl/dhparams.pem
+        select_crypto_backend: "openssl"
+        size: 4096
+        return_content: true
+      register: dhparams
+    - name: Create DHparam secret
+      kubernetes.core.k8s:
+        state: present
+        definition:
+          apiVersion: v1
+          kind: Secret
+          type: Opaque
+          metadata:
+            name: lb-dhparam
+            namespace: ingress-nginx
+          data:
+            dhparam.pem: "{{ dhparams.dhparams | b64encode }}"
+    - name: Headers Configuration
+      kubernetes.core.k8s:
+        state: present
+        definition:
+          apiVersion: v1
+          kind: ConfigMap
+          metadata:
+            name: headers
+            namespace: ingress-nginx
+          data:
+            X-Frame-Options: "SAMEORIGIN"
+            X-Content-Type-Options: "nosniff"
+            X-XSS-Protection: "1; mode=block"
+            Content-Security-Policy: "default-src 'self'; font-src *;img-src * data:; script-src *; style-src *"
+            Referrer-Policy: "strict-origin"
+    - name: Ingress Nginx Configuration
+      kubernetes.core.k8s:
+        state: present
+        definition:
+          apiVersion: v1
+          kind: ConfigMap
+          metadata:
+            name: ingress-nginx-controller
+            namespace: ingress-nginx
+          data:
+            keep-alive: "10"
+            hide-headers: "X-Powered-By,Server"
+            ssl-protocols: "TLSv1.3"
+            ssl-ciphers: "EECDH+AESGCM:EDH+AESGCM"
+            ssl-dh-param: "ingress-nginx/lb-dhparam"
+            enable-ocsp: "true"
+            hsts-preload: "true"
+            client-header-timeout: "10"
+            client-body-timeout: "10"
+            proxy-body-size: "50M"
+            large-client-header-buffers: "2 1k"
+            add-headers: "ingress-nginx/headers"

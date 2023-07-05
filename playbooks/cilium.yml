@@ -1,0 +1,38 @@
+---
+- name: Cilium
+  hosts: main
+  environment:
+    KUBECONFIG: "/etc/kubernetes/admin.conf"
+  tasks:
+    - name: Check Cilium installed
+      ansible.builtin.stat:
+        path: /usr/local/bin/cilium
+      register: cilium_file
+    - name: Download Cilium
+      ansible.builtin.get_url:
+        url: "https://github.com/cilium/cilium-cli/releases/download/{{ cilium_version }}/cilium-linux-amd64.tar.gz"
+        dest: /tmp/cilium-linux-amd64.tar.gz
+        mode: "0644"
+        checksum: "sha256:https://github.com/cilium/cilium-cli/releases/download/{{ cilium_version }}/cilium-linux-amd64.tar.gz.sha256sum"
+      vars:
+        cilium_version: "{{ lookup('ansible.builtin.url', 'https://raw.githubusercontent.com/cilium/cilium-cli/master/stable.txt') }}"
+      when: not cilium_file.stat.exists
+    - name: Extract Cilium
+      ansible.builtin.unarchive:
+        src: /tmp/cilium-linux-amd64.tar.gz
+        dest: /usr/local/bin
+        remote_src: true
+      when: not cilium_file.stat.exists
+    - name: Delete tmp files
+      ansible.builtin.file:
+        path: /tmp/cilium-linux-amd64.tar.gz
+        state: absent
+      when: not cilium_file.stat.exists
+    - name: Cilium Install
+      changed_when: true
+      ansible.builtin.command:
+        cilium install
+    - name: Hubble Install
+      changed_when: true
+      ansible.builtin.command:
+        cilium hubble enable
