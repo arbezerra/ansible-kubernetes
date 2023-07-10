@@ -19,7 +19,7 @@ Deploy a Production Kubernetes Cluster with Ansible.
 
 ## Install
 
-1. Change `--apiserver-advertise-address` to the external ip of master in `playbooks/cluster.yml`, and change the load balancer ip pool on `playbooks/metallb.yml`.
+1. Change `--apiserver-advertise-address` to the external ip of master in `playbooks/cluster.yml`, and change the load balancer ip pool on `playbooks/metallb.yml`, and change both staging and production emails in `playbooks/cert-manager.yml`.
 
 2. Set the hostnames of nodes in the file `hosts`.
 
