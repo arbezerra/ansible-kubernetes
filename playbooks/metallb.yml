@@ -24,5 +24,6 @@
             name: address-pool
             namespace: metallb-system
           spec:
+            avoidBuggyIPs: true
             addresses:
               - 172.86.0.0/16
