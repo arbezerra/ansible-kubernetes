@@ -1,0 +1,5 @@
+---
+- name: Kubeadm create token
+  register: join_command
+  changed_when: true
+  ansible.builtin.command: kubeadm token create --print-join-command

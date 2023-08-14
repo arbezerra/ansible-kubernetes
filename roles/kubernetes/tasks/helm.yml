@@ -1,0 +1,21 @@
+---
+- name: Check Helm installed
+  ansible.builtin.stat:
+    path: /usr/local/bin/helm
+  register: helm_file
+- name: Download Helm
+  ansible.builtin.get_url:
+    url: https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+    dest: /tmp/getHelm.sh
+    mode: "0700"
+  when: not helm_file.stat.exists
+- name: Execute getHelm script
+  ansible.builtin.command: /tmp/getHelm.sh
+  args:
+    creates: /usr/local/bin/helm
+  when: not helm_file.stat.exists
+- name: Delete tmp files
+  ansible.builtin.file:
+    path: /tmp/getHelm.sh
+    state: absent
+  when: not helm_file.stat.exists

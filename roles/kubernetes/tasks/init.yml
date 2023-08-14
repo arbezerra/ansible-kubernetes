@@ -1,0 +1,15 @@
+---
+- name: Kubeadm reset
+  changed_when: true
+  ansible.builtin.command: kubeadm reset -f
+- name: Kubeadm init
+  changed_when: true
+  ansible.builtin.command: kubeadm init
+    --apiserver-advertise-address={{ apiserver_advertise_address }}
+    --pod-network-cidr={{ pod_network_cidr }}
+    --service-dns-domain {{ service_dns_domain }}
+- name: Fetch config file
+  ansible.builtin.fetch:
+    src: /etc/kubernetes/admin.conf
+    dest: .kube/config
+    flat: true

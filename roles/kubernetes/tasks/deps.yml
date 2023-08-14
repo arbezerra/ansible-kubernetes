@@ -1,0 +1,7 @@
+---
+- name: Install dependencies
+  ansible.builtin.dnf:
+    name:
+      - git
+      - tar
+    state: installed

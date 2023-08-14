@@ -1,0 +1,67 @@
+---
+- name: Install Dependencies
+  become: true
+  ansible.builtin.import_tasks: deps.yml
+  tags:
+    - install
+
+- name: Install Docker
+  become: true
+  ansible.builtin.import_tasks: docker.yml
+  tags:
+    - install
+
+- name: Install Kubernetes
+  become: true
+  ansible.builtin.import_tasks: k8s.yml
+  tags:
+    - install
+
+- name: Helm
+  become: true
+  ansible.builtin.import_tasks: helm.yml
+  tags:
+    - install
+
+- name: Init Cluster
+  when: inventory_hostname in groups['main']
+  ansible.builtin.import_tasks: init.yml
+  tags:
+    - init
+
+- name: Create Token Cluster
+  when: inventory_hostname in groups['main']
+  ansible.builtin.import_tasks: token.yml
+  tags:
+    - join
+
+- name: Join Cluster
+  when: inventory_hostname in groups['workers']
+  ansible.builtin.import_tasks: join.yml
+  tags:
+    - join
+
+- name: Cilium
+  ansible.builtin.import_tasks: cilium.yml
+  tags:
+    - init
+
+- name: Metrics Server
+  ansible.builtin.import_tasks: metrics.yml
+  tags:
+    - init
+
+- name: Metallb
+  ansible.builtin.import_tasks: metallb.yml
+  tags:
+    - init
+
+- name: Ingress
+  ansible.builtin.import_tasks: ingress.yml
+  tags:
+    - apps
+
+- name: Cert Manager
+  ansible.builtin.import_tasks: ingress.yml
+  tags:
+    - apps

@@ -1,0 +1,4 @@
+---
+- name: Kubeadm join
+  changed_when: true
+  ansible.builtin.command: "{{ hostvars['lb']['join_command'].stdout }}"

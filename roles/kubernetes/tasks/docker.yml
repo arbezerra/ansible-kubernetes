@@ -1,0 +1,17 @@
+---
+- name: Add Docker Repo
+  ansible.builtin.command:
+    cmd: dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+  args:
+    creates: /etc/yum.repos.d/docker-ce.repo
+- name: Install docker
+  ansible.builtin.dnf:
+    name:
+      - containerd.io
+    state: installed
+- name: Default containered config
+  changed_when: true
+  ansible.builtin.shell: |
+    set -o pipefail
+    containerd config default | sed 's/SystemdCgroup = false/SystemdCgroup = true/' | tee /etc/containerd/config.toml
+  notify: Restart Containerd
