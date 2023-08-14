@@ -21,4 +21,4 @@
       spec:
         avoidBuggyIPs: true
         addresses:
-          - 172.86.0.0/16
+          - {{ metallb_pool }}
