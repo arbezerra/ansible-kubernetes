@@ -42,26 +42,31 @@
     - join
 
 - name: Cilium
+  when: inventory_hostname in groups['main']
   ansible.builtin.import_tasks: cilium.yml
   tags:
     - init
 
 - name: Metrics Server
+  when: inventory_hostname in groups['main']
   ansible.builtin.import_tasks: metrics.yml
   tags:
     - init
 
 - name: Metallb
+  when: inventory_hostname in groups['main']
   ansible.builtin.import_tasks: metallb.yml
   tags:
     - init
 
 - name: Ingress
+  when: inventory_hostname in groups['main']
   ansible.builtin.import_tasks: ingress.yml
   tags:
-    - apps
+    - init
 
 - name: Cert Manager
+  when: inventory_hostname in groups['main']
   ansible.builtin.import_tasks: ingress.yml
   tags:
-    - apps
+    - init
