@@ -9,6 +9,7 @@
     chart_ref: metallb/metallb
     release_namespace: metallb-system
     create_namespace: true
+    wait: true
 - name: Pool Configuration
   kubernetes.core.k8s:
     state: present
@@ -21,4 +22,4 @@
       spec:
         avoidBuggyIPs: true
         addresses:
-          - {{ metallb_pool }}
+          - "{{ metallb_pool }}"

@@ -9,6 +9,7 @@
     chart_ref: jetstack/cert-manager
     release_namespace: cert-manager
     create_namespace: true
+    wait: true
     set_values:
       - value: installCRDs=true
 - name: Letsenctrip staging

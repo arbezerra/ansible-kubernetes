@@ -9,6 +9,7 @@
     chart_ref: ingress-nginx/ingress-nginx
     release_namespace: ingress-nginx
     create_namespace: true
+    wait: true
 - name: Generate DH parameters
   community.crypto.openssl_dhparam:
     path: /etc/ssl/dhparams.pem
