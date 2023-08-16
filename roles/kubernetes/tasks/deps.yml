@@ -4,4 +4,6 @@
     name:
       - git
       - tar
+      - python3-pip
+      - iproute-tc
     state: installed

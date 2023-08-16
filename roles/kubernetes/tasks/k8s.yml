@@ -52,8 +52,6 @@
       - kubelet
       - kubeadm
       - kubectl
-      - python3-pip
-      - iproute-tc
     state: installed
     disable_excludes: kubernetes
   notify: Restart Kubelet

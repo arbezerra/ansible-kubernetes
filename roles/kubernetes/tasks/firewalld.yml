@@ -1,0 +1,24 @@
+---
+- name: Trusted Network
+  ansible.posix.firewalld:
+    source: "{{ item }}"
+    zone: trusted
+    state: enabled
+    permanent: true
+    immediate: true
+  with_items: 
+    - "{{ trusted_network }}"
+    - "{{ metallb_pool }}"
+    - "{{ pod_network_cidr }}"
+
+- name: NAT
+  ansible.posix.firewalld:
+    masquerade: true
+    state: enabled
+    permanent: true
+    immediate: true
+    zone: "{{ item }}"
+  with_items: 
+    - public
+    - trusted
+

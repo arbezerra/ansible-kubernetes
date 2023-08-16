@@ -1,7 +1,5 @@
 ---
 - name: Kubernetes Cluster
   hosts: all
-  environment:
-    KUBECONFIG: "/etc/kubernetes/admin.conf"
   roles:
     - kubernetes

@@ -5,6 +5,12 @@
   tags:
     - install
 
+- name: Firewall
+  become: true
+  ansible.builtin.import_tasks: firewalld.yml
+  tags:
+    - install
+
 - name: Install Docker
   become: true
   ansible.builtin.import_tasks: docker.yml
@@ -24,18 +30,21 @@
     - install
 
 - name: Init Cluster
+  become: true
   when: inventory_hostname in groups['main']
   ansible.builtin.import_tasks: init.yml
   tags:
     - init
 
 - name: Create Token Cluster
+  become: true
   when: inventory_hostname in groups['main']
   ansible.builtin.import_tasks: token.yml
   tags:
     - join
 
 - name: Join Cluster
+  become: true
   when: inventory_hostname in groups['workers']
   ansible.builtin.import_tasks: join.yml
   tags:

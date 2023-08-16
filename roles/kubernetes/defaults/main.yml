@@ -1,5 +1,7 @@
 ---
+email: "contact@example.com"
 apiserver_advertise_address: "192.168.0.1"
+trusted_network: "192.168.0.0/24"
 metallb_pool: "172.86.0.0/16"
 pod_network_cidr: "10.0.0.0/8"
 service_dns_domain: "cluster.local"

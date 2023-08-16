@@ -1,4 +1,8 @@
 ---
+- name: Kubeadm reset
+  changed_when: true
+  ansible.builtin.command: kubeadm reset -f
+  
 - name: Kubeadm join
   changed_when: true
-  ansible.builtin.command: "{{ hostvars['lb']['join_command'].stdout }}"
+  ansible.builtin.command: "{{ hostvars['K8S']['TOKEN'] }}"

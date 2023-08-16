@@ -2,12 +2,34 @@
 - name: Kubeadm reset
   changed_when: true
   ansible.builtin.command: kubeadm reset -f
+
+- name: Delete kubernetes folder
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - /etc/kubernetes/
+    - /var/lib/kubelet/
+    - /var/lib/etcd
+
 - name: Kubeadm init
   changed_when: true
-  ansible.builtin.command: kubeadm init
-    --apiserver-advertise-address={{ apiserver_advertise_address }}
-    --pod-network-cidr={{ pod_network_cidr }}
-    --service-dns-domain {{ service_dns_domain }}
+  ansible.builtin.shell: kubeadm init --apiserver-advertise-address={{ apiserver_advertise_address }} --pod-network-cidr={{ pod_network_cidr }} --service-dns-domain={{ service_dns_domain }}
+
+- name: Config directory
+  ansible.builtin.file:
+    path: "/home/{{ ansible_user }}/.kube"
+    state: directory
+
+- name: Copy config file
+  ansible.builtin.copy:
+    src: /etc/kubernetes/admin.conf
+    dest: "/home/{{ ansible_user }}/.kube/config"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0755
+    remote_src: true
+
 - name: Fetch config file
   ansible.builtin.fetch:
     src: /etc/kubernetes/admin.conf
