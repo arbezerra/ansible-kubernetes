@@ -11,6 +11,7 @@
     create_namespace: true
     wait: true
 - name: Generate DH parameters
+  become: true
   community.crypto.openssl_dhparam:
     path: /etc/ssl/dhparams.pem
     select_crypto_backend: "openssl"
