@@ -55,6 +55,12 @@
     state: installed
     disable_excludes: kubernetes
   notify: Restart Kubelet
+- name: Enable Kubelet
+  become: true
+  ansible.builtin.systemd:
+    name: kubelet
+    state: started
+    enabled: true
 - name: Install ansible requisites
   ansible.builtin.pip:
     name:

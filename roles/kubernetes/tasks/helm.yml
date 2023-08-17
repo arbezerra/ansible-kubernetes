@@ -11,6 +11,8 @@
   when: not helm_file.stat.exists
 - name: Execute getHelm script
   ansible.builtin.command: /tmp/getHelm.sh
+  environment: 
+    PATH: "/usr/local/bin:$PATH"
   args:
     creates: /usr/local/bin/helm
   when: not helm_file.stat.exists

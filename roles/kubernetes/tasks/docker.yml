@@ -15,3 +15,9 @@
     set -o pipefail
     containerd config default | sed 's/SystemdCgroup = false/SystemdCgroup = true/' | tee /etc/containerd/config.toml
   notify: Restart Containerd
+- name: Enable Containerd
+  become: true
+  ansible.builtin.systemd:
+    name: containerd
+    state: started
+    enabled: true
