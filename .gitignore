@@ -1,3 +1,4 @@
 .kube
 values.yml
 hosts
+.vscode/settings.json
