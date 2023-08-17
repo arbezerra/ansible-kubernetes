@@ -19,6 +19,7 @@
 - name: Config directory
   ansible.builtin.file:
     path: "/home/{{ ansible_user }}/.kube"
+    mode: "0755"
     state: directory
 
 - name: Copy config file
@@ -27,7 +28,7 @@
     dest: "/home/{{ ansible_user }}/.kube/config"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-    mode: 0755
+    mode: "0755"
     remote_src: true
 
 - name: Fetch config file

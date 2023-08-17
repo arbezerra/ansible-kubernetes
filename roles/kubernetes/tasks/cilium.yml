@@ -21,7 +21,7 @@
     extra_opts: "--strip-components=1"
     owner: root
     group: root
-    mode: 0755
+    mode: "0755"
     remote_src: true
   when: not cilium_file.stat.exists
 - name: Delete tmp files
