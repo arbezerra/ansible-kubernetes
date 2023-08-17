@@ -6,4 +6,5 @@
       - tar
       - python3-pip
       - iproute-tc
+      - nfs-utils
     state: installed
