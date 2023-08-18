@@ -73,9 +73,11 @@
   ansible.builtin.import_tasks: ingress.yml
   tags:
     - init
+    - ingress
 
 - name: Cert Manager
   when: inventory_hostname in groups['main']
-  ansible.builtin.import_tasks: ingress.yml
+  ansible.builtin.import_tasks: cert-manager.yml
   tags:
     - init
+    - certs
