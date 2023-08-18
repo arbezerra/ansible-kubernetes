@@ -10,6 +10,10 @@
     release_namespace: ingress-nginx
     create_namespace: true
     wait: true
+    values:
+      controller:
+        service:
+          externalTrafficPolicy: "Local"
 - name: Generate DH parameters
   become: true
   community.crypto.openssl_dhparam:
@@ -55,6 +59,7 @@
         name: ingress-nginx-controller
         namespace: ingress-nginx
       data:
+        use-proxy-protocol: "true"
         keep-alive: "10"
         hide-headers: "X-Powered-By,Server"
         ssl-protocols: "TLSv1.3"
