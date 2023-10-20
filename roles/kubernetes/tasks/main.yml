@@ -67,6 +67,7 @@
   ansible.builtin.import_tasks: metallb.yml
   tags:
     - init
+    - metallb
 
 - name: Ingress
   when: inventory_hostname in groups['main']
